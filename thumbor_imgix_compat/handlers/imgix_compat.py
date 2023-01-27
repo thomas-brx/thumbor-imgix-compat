@@ -8,12 +8,9 @@
 from hashlib import md5
 import tornado.web
 from urllib.parse import urlparse, parse_qs
+from os import getenv
 
 from thumbor.handlers.imaging import ImagingHandler
-from thumbor.utils import logger
-
-from thumbor_imgix_compat.imgix_compat import ImgixCompat
-from tc_core.web import RequestParser
 
 
 class ImgxCompatHandler(ImagingHandler):
@@ -26,11 +23,8 @@ class ImgxCompatHandler(ImagingHandler):
         :return: The list of regex used for routing.
         :rtype: string
         '''
-        return [
-            r'^/listing-assets/.*',
-            r'^/uploads/.*',
-            r'^/.*png$',
-        ]
+        regexp_list = getenv('IMGIX_HANDLER_REGEXP')
+        return regexp_list.split(';')
 
 
     def check_imgix_signature(self, qs: map) -> bool:
