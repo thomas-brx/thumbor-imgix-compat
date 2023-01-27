@@ -104,7 +104,7 @@ class ImgxCompatHandler(ImagingHandler):
             'valign': valign,
             'smart': smart,
             'filters': ':'.join(filters) if len(filters) > 0 else None,
-            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + parsed.path,
+            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + parsed.path.lstrip('/'),
         }
 
 
