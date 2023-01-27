@@ -14,9 +14,6 @@ Config.define('IMGIX_COMPAT_HASH', None, 'Imgix hash', 'ImgixCompat')
 Config.define('IMGIX_COMPAT_STORAGE_ROOT', None, 'Imgix storage root', 'ImgixCompat')
 Config.define('IMGIX_COMPAT_AUTO_QUALITY', 95, 'Quality to use for auto=compress', 'ImgixCompat')
 
-logger.debug("CONFIG")
-logger.debug(Config.get("IMGIX_COMPAT_HASH"))
-
 # Register the route
 for r in ImgxCompatHandler.regex():
     extension.add_handler(r, ImgxCompatHandler)
