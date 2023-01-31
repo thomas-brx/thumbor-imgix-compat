@@ -67,8 +67,12 @@ class ImgxCompatHandler(ImagingHandler):
             filters.append('quality({})'.format(self.context.config.get('IMGIX_COMPAT_AUTO_QUALITY')))
 
         
-        if 'fill' in qs and qs['fill'] == 'blur':
+        if 'fill' in qs:
+            if qs['fill'] == 'blur':
                 filters.append('fill(blur)')
+            elif qs['fill'] == 'solid' and 'fill-color' in qs:
+                filters.append('fill({})'.format(qs['fill-color']))
+
 
         if 'fit' in qs:
             if qs['fit'] == 'crop':
