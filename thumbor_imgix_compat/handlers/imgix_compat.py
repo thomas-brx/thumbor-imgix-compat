@@ -121,6 +121,10 @@ class ImgxCompatHandler(ImagingHandler):
             #   For the case when we have no width/height, we really need to hook into thumbor
             #   when the actual size of the image is known.
 
+        # Deal with double encoded paths
+        path = parsed.path
+        while path != unquote(path):
+            path = unquote(path)
 
         return {
             'unsafe': unsafe,
@@ -143,7 +147,7 @@ class ImgxCompatHandler(ImagingHandler):
             'valign': valign,
             'smart': smart,
             'filters': ':'.join(filters) if len(filters) > 0 else None,
-            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + unquote(parsed.path).lstrip('/'),
+            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + path.lstrip('/'),
         }
 
 
