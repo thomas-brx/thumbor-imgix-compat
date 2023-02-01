@@ -72,7 +72,7 @@ class ImgxCompatHandler(ImagingHandler):
             if qs['fill'] == 'blur':
                 filters.append('fill(blur)')
             elif qs['fill'] == 'solid' and 'fill-color' in qs:
-                filters.append('fill({})'.format(qs['fill-color']))
+                filters.append('fill({})'.format(qs['fill-color'].replace('#', '')))
 
 
         if 'fit' in qs:
