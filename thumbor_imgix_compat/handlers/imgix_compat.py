@@ -81,14 +81,14 @@ class ImgxCompatHandler(ImagingHandler):
                 fit_in = 'fit-in'
 
         if 'h' in qs:
-            height = qs['h']
+            height = int(qs['h'])
 
         if 'w' in qs:
-            width = qs['w']
+            width = int(qs['w'])
 
         if 'ar' in qs:
-            w, h = map(int, qs['ar'].split(':'))
-            ratio = w / h
+            ar_w, ar_h = map(int, qs['ar'].split(':'))
+            ratio = ar_w / ar_h
 
             if height is None and width is None:
                 # Set to MAX_WIDTH / MAX_HEIGHT if defined
@@ -107,9 +107,9 @@ class ImgxCompatHandler(ImagingHandler):
             elif width is not None and height is not None:
                 # Make sure supplied width and height are correct wrt the aspect ratio.
                 # If not, adjust the dimension that is too big
-                if width > int(height * ratio):
+                if width > height * ratio:
                     width = int(height * ratio)
-                elif height > int(width / ratio):
+                elif height > width / ratio:
                     height = int(width / ratio)
             # else
             #   For the case when we have no width/height, we really need to hook into thumbor
@@ -130,9 +130,9 @@ class ImgxCompatHandler(ImagingHandler):
             'full': full,
             'fit_in': fit_in,
             'horizontal_flip': None,
-            'width': width,
+            'width': str(width) if width is not None else None,
             'vertical_flip': None,
-            'height': height,
+            'height': str(height) if height is not None else None,
             'halign': halign,
             'valign': valign,
             'smart': smart,
