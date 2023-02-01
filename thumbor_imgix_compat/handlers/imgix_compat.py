@@ -7,10 +7,8 @@
 
 from hashlib import md5
 import tornado.web
-from urllib.parse import urlparse, parse_qs, unquote, quote
+from urllib.parse import urlparse, parse_qs
 from os import getenv
-
-from thumbor.utils import logger
 
 from thumbor.handlers.imaging import ImagingHandler
 
@@ -42,11 +40,7 @@ class ImgxCompatHandler(ImagingHandler):
 
         request_uri = self.request.uri.replace(f'&s={query_signature}', '')
 
-        res = md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature
-        if not res:
-            logger.error(f"hash mismatch for {imgix_hash + request_uri}")
-
-        return res
+        return md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature
 
 
     def build_request(self):
@@ -121,10 +115,6 @@ class ImgxCompatHandler(ImagingHandler):
             #   For the case when we have no width/height, we really need to hook into thumbor
             #   when the actual size of the image is known.
 
-        # Deal with double encoded paths
-        path = parsed.path
-        while path != unquote(path):
-            path = unquote(path)
 
         return {
             'unsafe': unsafe,
@@ -147,7 +137,7 @@ class ImgxCompatHandler(ImagingHandler):
             'valign': valign,
             'smart': smart,
             'filters': ':'.join(filters) if len(filters) > 0 else None,
-            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + path.lstrip('/'),
+            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + parsed.path.lstrip('/'),
         }
 
 
