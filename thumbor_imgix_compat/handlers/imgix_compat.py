@@ -6,6 +6,7 @@
 
 
 from hashlib import md5
+from math import ceil
 import tornado.web
 from urllib.parse import urlparse, parse_qs
 from os import getenv
@@ -108,9 +109,9 @@ class ImgxCompatHandler(ImagingHandler):
                 # Make sure supplied width and height are correct wrt the aspect ratio.
                 # If not, adjust the dimension that is too big
                 if width > height * ratio:
-                    width = int(height * ratio)
+                    width = ceil(height * ratio)
                 elif height > width / ratio:
-                    height = int(width / ratio)
+                    height = ceil(width / ratio)
             # else
             #   For the case when we have no width/height, we really need to hook into thumbor
             #   when the actual size of the image is known.
