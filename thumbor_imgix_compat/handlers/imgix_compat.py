@@ -86,6 +86,35 @@ class ImgxCompatHandler(ImagingHandler):
         if 'w' in qs:
             width = qs['w']
 
+        if 'ar' in qs:
+            w, h = map(int, qs['ar'].split(':'))
+            ratio = w / h
+
+            if height is None and width is None:
+                # Set to MAX_WIDTH / MAX_HEIGHT if defined
+                width = self.context.config.get('MAX_WIDTH')
+                height = self.context.config.get('MAX_HEIGHT')
+
+                if width == 0:
+                    width = None
+                if height == 0:
+                    height = None
+
+            if height is not None and width is None:
+                width = int(height * ratio)
+            elif width is not None and height is None:
+                height = int(width / ratio)
+            elif width is not None and height is not None:
+                # Make sure supplied width and height are correct wrt the aspect ratio.
+                # If not, adjust the dimension that is too big
+                if width > int(height * ratio):
+                    width = int(height * ratio)
+                elif height > int(width / ratio):
+                    height = int(width / ratio)
+            # else
+            #   For the case when we have no width/height, we really need to hook into thumbor
+            #   when the actual size of the image is known.
+
 
         return {
             'unsafe': unsafe,
