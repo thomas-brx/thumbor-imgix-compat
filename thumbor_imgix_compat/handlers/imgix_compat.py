@@ -122,7 +122,7 @@ class ImgxCompatHandler(ImagingHandler):
 
                     # Pick closest match
                     if abs(width / height_ceil - ratio) < abs((width / height_floor - ratio)):
-                        width = width_ceil
+                        height = height_ceil
                     elif abs(width / height_ceil - ratio) > abs((width / height_floor - ratio)):
                         height = height_floor
                     else:
