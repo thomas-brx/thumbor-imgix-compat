@@ -7,8 +7,10 @@
 
 from hashlib import md5
 import tornado.web
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, unquote, quote
 from os import getenv
+
+from thumbor.utils import logger
 
 from thumbor.handlers.imaging import ImagingHandler
 
@@ -40,7 +42,11 @@ class ImgxCompatHandler(ImagingHandler):
 
         request_uri = self.request.uri.replace(f'&s={query_signature}', '')
 
-        return md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature
+        res = md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature
+        if not res:
+            logger.error(f"hash mismatch for {imgix_hash + request_uri}")
+
+        return res
 
 
     def build_request(self):
