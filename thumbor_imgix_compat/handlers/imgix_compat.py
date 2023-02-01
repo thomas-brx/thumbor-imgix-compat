@@ -109,7 +109,10 @@ class ImgxCompatHandler(ImagingHandler):
                     width_floor = floor(height * ratio)
 
                     # Pick closest match
-                    if abs(width_ceil / height - ratio) < abs((width_floor / height - ratio)):
+                    if width in [width_ceil, width_floor]:
+                        # Keep the selected width
+                        pass
+                    elif abs(width_ceil / height - ratio) < abs((width_floor / height - ratio)):
                         width = width_ceil
                     elif abs(width_ceil / height - ratio) > abs((width_floor / height - ratio)):
                         width = width_floor
@@ -121,7 +124,9 @@ class ImgxCompatHandler(ImagingHandler):
                     height_floor = floor(width / ratio)
 
                     # Pick closest match
-                    if abs(width / height_ceil - ratio) < abs((width / height_floor - ratio)):
+                    if height in [height_floor, height_ceil]:
+                        pass
+                    elif abs(width / height_ceil - ratio) < abs((width / height_floor - ratio)):
                         height = height_ceil
                     elif abs(width / height_ceil - ratio) > abs((width / height_floor - ratio)):
                         height = height_floor
