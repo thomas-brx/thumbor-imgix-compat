@@ -45,7 +45,7 @@ class ImgxCompatHandler(ImagingHandler):
 
 
     def build_request(self):
-        parsed = urlparse(self.request.uri)
+        parsed = urlparse('/' + self.request.uri.lstrip('/'))
         qs = {k: v[-1] for k, v in parse_qs(parsed.query).items()}
 
         if not self.check_imgix_signature(qs):
