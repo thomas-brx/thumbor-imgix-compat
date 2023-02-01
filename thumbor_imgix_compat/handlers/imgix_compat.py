@@ -6,7 +6,6 @@
 
 
 from hashlib import md5
-from math import ceil
 import tornado.web
 from urllib.parse import urlparse, parse_qs
 from os import getenv
@@ -102,16 +101,16 @@ class ImgxCompatHandler(ImagingHandler):
                     height = None
 
             if height is not None and width is None:
-                width = int(height * ratio)
+                width = round(height * ratio)
             elif width is not None and height is None:
-                height = int(width / ratio)
+                height = round(width / ratio)
             elif width is not None and height is not None:
                 # Make sure supplied width and height are correct wrt the aspect ratio.
                 # If not, adjust the dimension that is too big
                 if width > height * ratio:
-                    width = ceil(height * ratio)
+                    width = round(height * ratio)
                 elif height > width / ratio:
-                    height = ceil(width / ratio)
+                    height = round(width / ratio)
             # else
             #   For the case when we have no width/height, we really need to hook into thumbor
             #   when the actual size of the image is known.
