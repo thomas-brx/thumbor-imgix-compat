@@ -7,7 +7,7 @@
 
 from hashlib import md5
 import tornado.web
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, unquote
 from os import getenv
 
 from thumbor.handlers.imaging import ImagingHandler
@@ -137,7 +137,7 @@ class ImgxCompatHandler(ImagingHandler):
             'valign': valign,
             'smart': smart,
             'filters': ':'.join(filters) if len(filters) > 0 else None,
-            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + parsed.path.lstrip('/'),
+            'image': self.context.config.get('IMGIX_COMPAT_STORAGE_ROOT') + unquote(parsed.path).lstrip('/'),
         }
 
 
