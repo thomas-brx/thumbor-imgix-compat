@@ -6,6 +6,7 @@
 
 
 from hashlib import md5
+from math import ceil, floor
 import tornado.web
 from urllib.parse import urlparse, parse_qs, unquote
 from os import getenv
@@ -100,17 +101,33 @@ class ImgxCompatHandler(ImagingHandler):
                 if height == 0:
                     height = None
 
-            if height is not None and width is None:
-                width = round(height * ratio)
-            elif width is not None and height is None:
-                height = round(width / ratio)
-            elif width is not None and height is not None:
+            if width is not None or height is not None:
                 # Make sure supplied width and height are correct wrt the aspect ratio.
                 # If not, adjust the dimension that is too big
-                if width > height * ratio:
-                    width = round(height * ratio)
-                elif height > width / ratio:
-                    height = round(width / ratio)
+                if width is None or width > height * ratio:
+                    width_ceil = ceil(height * ratio)
+                    width_floor = floor(height * ratio)
+
+                    # Pick closest match
+                    if abs(width_ceil / height - ratio) < abs((width_floor / height - ratio)):
+                        width = width_ceil
+                    elif abs(width_ceil / height - ratio) > abs((width_floor / height - ratio)):
+                        width = width_floor
+                    else:
+                        width = round(height * ratio)
+
+                elif height is None or height > width / ratio:
+                    height_ceil = ceil(width / ratio)
+                    height_floor = floor(width / ratio)
+
+                    # Pick closest match
+                    if abs(width / height_ceil - ratio) < abs((width / height_floor - ratio)):
+                        width = width_ceil
+                    elif abs(width / height_ceil - ratio) > abs((width / height_floor - ratio)):
+                        height = height_floor
+                    else:
+                        height = round(width / ratio)
+
             # else
             #   For the case when we have no width/height, we really need to hook into thumbor
             #   when the actual size of the image is known.
