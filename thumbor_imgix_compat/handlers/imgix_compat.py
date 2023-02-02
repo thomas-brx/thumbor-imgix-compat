@@ -41,7 +41,12 @@ class ImgxCompatHandler(ImagingHandler):
 
         request_uri = self.request.uri.replace(f'&s={query_signature}', '')
 
-        return md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature
+        check_extra_leading_slash = self.context.config.get('IMGIX_COMPAT_CHECK_LEADING_SLASH', None)
+
+        return (
+            md5((imgix_hash + request_uri).encode('utf8')).hexdigest() == query_signature or
+            (check_extra_leading_slash and md5((imgix_hash + '/' + request_uri).encode('utf8')).hexdigest() == query_signature)
+        )
 
 
     def build_request(self):

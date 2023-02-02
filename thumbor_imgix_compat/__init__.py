@@ -13,6 +13,7 @@ extension = Extension('thumbor_imgix_compat')
 Config.define('IMGIX_COMPAT_HASH', None, 'Imgix hash', 'ImgixCompat')
 Config.define('IMGIX_COMPAT_STORAGE_ROOT', None, 'Imgix storage root', 'ImgixCompat')
 Config.define('IMGIX_COMPAT_AUTO_QUALITY', 95, 'Quality to use for auto=compress', 'ImgixCompat')
+Config.define('IMGIX_COMPAT_CHECK_LEADING_SLASH', False, 'Verify imgix hash with an additional leading slash on the URI', 'ImgixCompat')
 
 # Register the route
 for r in ImgxCompatHandler.regex():
